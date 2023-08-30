@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import Input from './InputItem.vue'
-import Button from './ButtonItem.vue'
+import Input from '@/components/InputItem.vue'
+import Button from '@/components/ButtonItem.vue'
 import { object, string, ref } from 'yup';
 import { Form } from 'vee-validate';
-import axios from '../axios';
+import axios from '@/axios';
 import { AxiosResponse, AxiosError } from 'axios';
 
 // Registration.vue build Inputelements from Inputitem.vue via props 
