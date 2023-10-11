@@ -1,21 +1,24 @@
 <script setup lang="ts">
 import { Field, ErrorMessage } from 'vee-validate';
+import { toRefs, computed, watch, ref } from 'vue';
 
 interface Input {
   id: string;
   icon: string;
   type: string;
   name: string;
+  value?: string;
 }
+// get input values from parent via props
+const props = defineProps<{ inputs: Input[] }>();
 
-// get input structure plan vom parent via props
-defineProps<{ inputs?: Input[] }>();
 const emit = defineEmits(['input']);
 
-// Emit input event to parent component
-const handleInputUpdate = (inputId: string, newValue: string) => {
+// Emit input updates (event) to parent component
+const handleInputUpdate = (inputId: string, newValue: string) => { 
   emit('input', { inputId, newValue }); 
 };
+
 
 </script>
 
@@ -25,6 +28,7 @@ const handleInputUpdate = (inputId: string, newValue: string) => {
     <Field
       :name="input.id"
       :type="input.type"
+      v-model="input.value"
       class="form-control"
       :placeholder="input.name"
       @input="handleInputUpdate(input.id, $event.target.value)"

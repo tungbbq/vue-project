@@ -49,11 +49,12 @@ const buttonLogin = [
         name: 'login'
     }
 ];
-
+// save user information in cookie
+// TODO: messages
 const onSubmit = async ()=> {
 console.log(formInput)
 await axios
-        .post('/api/login_check', {
+        .post('/login_check', {
             email: formInput.email,
             password: formInput.password
         })
@@ -65,7 +66,7 @@ await axios
             }
         })
         .catch((error: AxiosError) => {
-
+console.log(error)
         })
 };
 

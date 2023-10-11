@@ -7,7 +7,7 @@ import axios from '@/axios';
 import { AxiosResponse, AxiosError } from 'axios';
 
 // Registration.vue build Inputelements from Inputitem.vue via props 
-// inputRegistration array has plan and structure
+// const inputRegistration include id, icon, type and name of all inputs
 // registration logic is here
 // to get values from input fields -> get values via emit from inputitem child
 // values are safe in formInput
@@ -40,12 +40,12 @@ const schema = object({
     }),
 });
 
-// get input values from child component via emit
+// get input values from child component via emit and update formInput
 const handleInputUpdate = ({ inputId, newValue }: { inputId: string, newValue: string }) => {
     formInput[inputId] = newValue; // Update input values
 };
 
-// structure plan for inputitem
+// values for inputitem
 const inputRegistration = [
     {
         id: 'email',
@@ -92,7 +92,7 @@ const inputRegistration = [
 
 ];
 
-// structure plan for buttonitem
+// values for buttonitem
 const buttonRegistration = [
     {
         id: 1,
@@ -102,11 +102,13 @@ const buttonRegistration = [
 ];
 
 // registration logic
+// axios post request
+// TODO: messages
 const onSubmit = async () => {
     console.log(formInput)
 
     await axios
-        .post('/api/register', {
+        .post('/register', {
             email: formInput.email,
             name: formInput.name,
             plz: formInput.zip,

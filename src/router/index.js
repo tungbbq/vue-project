@@ -56,25 +56,33 @@ const router = createRouter({
 // navigation guard, check if user is loggedIn, verified and token is valid
 
 router.beforeEach((to, from, next) => {
-    const decoded = jwt_decode($cookies.get('token'))
-    const currentDate = Date.now() / 1000;
-
-    if (to.meta.requiresAuth ) {
-        if(!decoded){
-            alert('Login')
-            next('/login')
+    const token = $cookies.get("token");
+    if (to.meta.requiresAuth) {
+      if (!token) {
+        // User is not logged in, redirect to login page with a message
+        alert('Login')
+        next({ name: "login", query: { message: "Please log in." } });
+      } else {
+        const decoded = jwt_decode(token);
+        const currentDate = Date.now() / 1000;
+  
+        if (decoded.verifyCode !== 1) {
+          // User is not verified, redirect to login page with a message
+          alert('Verify')
+          next({ name: "login", query: { message: "Please verify your account." } });
+        } else if (decoded.exp < currentDate) {
+          // Token has expired, redirect to login page with a message
+          alert('Expired')
+          next({ name: "login", query: { message: "Session expired. Please log in again." } });
+        } else {
+          // User is authenticated and token is valid, proceed with the route
+          next();
         }
-        else if(decoded.verifyCode !== 1){
-            alert('Verify')
-            next('/login')
-        } else if(decoded.exp < currentDate){
-            alert('Expired')
-            next('/login')
-        } else next();
+      }
     } else {
-        // Continue with the navigation
-        next();
+      // Continue with the navigation for routes that do not require authentication
+      next();
     }
-});
+  });
 
 export default router;
