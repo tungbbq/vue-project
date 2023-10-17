@@ -8,15 +8,15 @@ interface Input {
   type: string;
   name: string;
   value?: string;
-}
+}  
 // get input values from parent via props
 const props = defineProps<{ inputs: Input[] }>();
 
-const emit = defineEmits(['input']);
+const emits = defineEmits(['input']);
 
 // Emit input updates (event) to parent component
 const handleInputUpdate = (inputId: string, newValue: string) => { 
-  emit('input', { inputId, newValue }); 
+  emits('input', { inputId, newValue }); 
 };
 
 

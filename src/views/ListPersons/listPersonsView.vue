@@ -1,25 +1,27 @@
 <script setup lang="ts">
 import Navbar from '@/components/NavbarItem.vue'
 import Table from '@/components/TableItem.vue'
-import Page from '@/components/PaginationItem.vue'
+import Pagination from '@/components/PaginationItem.vue'
+import Test from '@/components/TestItem.vue'
 import axios from '@/axios';
 import { AxiosResponse, AxiosError } from 'axios';
 import { VueCookies } from 'vue-cookies';
-import { inject, reactive } from 'vue';
+import { inject } from 'vue';
 import jwt_decode from "jwt-decode";
+
 
 const $cookies = inject<VueCookies>('$cookies');
 const token = $cookies?.get('token');
 const userId = (jwt_decode(token).Id);
 const headers = { headers: { Authorization: `Bearer ${token}` } } 
 
-const maxVisibleButtons = 5
-const totalPages = 10
+const maxVisibleButtons = 3
+const totalPages = 3                        
 const perPages = 10
-const currentPage = 1
+const currentPage = 3
 
 const getMyData = async () => {
-    await axios
+    await axios 
         .get(`/pagination`, headers)
         .then((res: AxiosResponse) => {
             console.log(res)
@@ -35,16 +37,21 @@ const getMyData = async () => {
 };
 getMyData();
 
+const updatePagination = (test) => {
+    console.log(test)
+}
+
 </script>
 
 <template>
     <h4> ListPersons</h4>
 <Navbar />
 <Table />
-<Page 
+<Pagination 
 :maxVisibleButtons = "maxVisibleButtons"
 :totalPages = "totalPages"
 :perPages = "perPages"
 :currentPage = "currentPage"
+@pagechanged="updatePagination"
 />
 </template>
