@@ -9,11 +9,14 @@ import { AxiosResponse, AxiosError } from 'axios';
 import { VueCookies } from 'vue-cookies';
 import { inject, reactive } from 'vue';
 import jwt_decode from "jwt-decode";
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
+const userId = route.params.id;
 // access vue-cookies
 const $cookies = inject<VueCookies>('$cookies');
 const token = $cookies?.get('token');
-const userId = (jwt_decode(token).Id);
+
 const headers = { headers: { Authorization: `Bearer ${token}` } } 
 
 const formInput = {
@@ -107,7 +110,6 @@ const buttonMyData = [
         name: 'aktualisieren'
     }
 ];
-
 // TODO: switch case instead of if condition
 // get user data
 const getMyData = async () => {

@@ -6,27 +6,41 @@ import Test from '@/components/TestItem.vue'
 import axios from '@/axios';
 import { AxiosResponse, AxiosError } from 'axios';
 import { VueCookies } from 'vue-cookies';
-import { inject } from 'vue';
+import { inject, ref } from 'vue';
 import jwt_decode from "jwt-decode";
+import {  useRouter } from 'vue-router';
 
 
 const $cookies = inject<VueCookies>('$cookies');
 const token = $cookies?.get('token');
 const userId = (jwt_decode(token).Id);
-const headers = { headers: { Authorization: `Bearer ${token}` } } 
+const headers = { headers: { Authorization: `Bearer ${token}` } }
 
+const router = useRouter();
+const users = ref([])
+// Define the table columns and their keys
+const tableColumns = [
+  { label: 'Name', key: 'name' },
+  { label: 'E-Mail', key: 'email' },
+  { label: 'Ort', key: 'ort' },
+  { label: 'Postleitzahl', key: 'plz' },
+  { label: 'Telefon', key: 'telefon' },
+];
+
+const totalCountUsers = ref(0)
 const maxVisibleButtons = 3
-const totalPages = 3                        
 const perPages = 10
-const currentPage = 3
+const totalPages = ref(0)
+const currentPage = ref(1)
 
-const getMyData = async () => {
-    await axios 
+const getTotalRecords = async () => {
+    await axios
         .get(`/pagination`, headers)
         .then((res: AxiosResponse) => {
-            console.log(res)
-            // response is an array with 1 object
-           
+            totalCountUsers.value = res.data
+            totalPages.value = Math.ceil(totalCountUsers.value / perPages)
+            updatePagination(currentPage.value)
+
             if (res.status = 200) {
                 // loop through object and get key values
             }
@@ -35,23 +49,47 @@ const getMyData = async () => {
             console.log(error)
         })
 };
-getMyData();
+getTotalRecords();
 
-const updatePagination = (test) => {
-    console.log(test)
+const updatePagination = (newPage: Number) => {
+    const getNewPage = async () => {
+        await axios
+            .get(`/page/${newPage}`, headers)
+            .then((res: AxiosResponse) => {
+                users.value = res.data.response
+                currentPage.value = newPage
+
+                if (res.status = 200) {
+                    // loop through object and get key values
+                }
+            })
+            .catch((error: AxiosError) => {
+                console.log(error)
+            })
+    }
+    getNewPage();
+
+}
+
+const showUser = (id) =>{
+    console.log(id)
+    router.push({ name: 'person', params: { id}});
 }
 
 </script>
 
 <template>
     <h4> ListPersons</h4>
-<Navbar />
-<Table />
-<Pagination 
-:maxVisibleButtons = "maxVisibleButtons"
-:totalPages = "totalPages"
-:perPages = "perPages"
-:currentPage = "currentPage"
-@pagechanged="updatePagination"
-/>
+    <Navbar />
+    <Table 
+        :users="users"
+        :tableColumns="tableColumns"
+        @user-clicked="showUser"
+    />
+    <Pagination 
+        :maxVisibleButtons="maxVisibleButtons" 
+        :totalPages="totalPages" 
+        :perPages="perPages"
+        :currentPage="currentPage" 
+        @pagechanged="updatePagination" />
 </template>

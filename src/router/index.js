@@ -6,6 +6,7 @@ import Startpage from '@/views/Startpage/startpageView.vue'
 import MyData from '@/views/MyData/myDataView.vue'
 import ListPersons from '@/views/ListPersons/listPersonsView.vue'
 import Search from '@/views/Search/searchView.vue'
+import Person from '@/views/ListPersons/personDetailView.vue'
 import jwt_decode from "jwt-decode";
 
 const router = createRouter({
@@ -49,7 +50,13 @@ const router = createRouter({
             name: 'search',
             component: Search,
             meta: { requiresAuth: true }
-        }
+        },
+        {
+          path: '/listpersons/id/:id',
+          name: 'person',
+          component: Person,
+          meta: { requiresAuth: true }
+      }
     ]
 });
 
