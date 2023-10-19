@@ -1,19 +1,20 @@
 <script setup lang="ts">
-import Navbar from '@/components/NavbarItem.vue'
-import Table from '@/components/TableItem.vue'
-import Pagination from '@/components/PaginationItem.vue'
-import Test from '@/components/TestItem.vue'
-import axios from '@/axios';
-import { AxiosResponse, AxiosError } from 'axios';
-import { VueCookies } from 'vue-cookies';
+import Navbar from '../../components/NavbarItem.vue'
+import Table from '../../components/TableItem.vue'
+import Pagination from '../../components/PaginationItem.vue'
+import Test from '../../components/TestItem.vue'
+import axios from '../../axios';
+import type { AxiosResponse, AxiosError } from 'axios';
+import type { VueCookies } from 'vue-cookies';
 import { inject, ref } from 'vue';
 import jwt_decode from "jwt-decode";
 import {  useRouter } from 'vue-router';
+import type { JwtPayload } from '../MyData/myDataView.vue';
 
 
 const $cookies = inject<VueCookies>('$cookies');
 const token = $cookies?.get('token');
-const userId = (jwt_decode(token).Id);
+const userId = (jwt_decode<JwtPayload>(token).Id);
 const headers = { headers: { Authorization: `Bearer ${token}` } }
 
 const router = useRouter();
@@ -51,7 +52,7 @@ const getTotalRecords = async () => {
 };
 getTotalRecords();
 
-const updatePagination = (newPage: Number) => {
+const updatePagination = (newPage: number) => {
     const getNewPage = async () => {
         await axios
             .get(`/page/${newPage}`, headers)
@@ -71,7 +72,8 @@ const updatePagination = (newPage: Number) => {
 
 }
 
-const showUser = (id) =>{
+const showUser = (id: number) =>
+{
     console.log(id)
     router.push({ name: 'person', params: { id}});
 }

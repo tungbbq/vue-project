@@ -1,26 +1,36 @@
 <script setup lang="ts">
-import Navbar from '@/components/NavbarItem.vue'
-import Input from '@/components/InputItem.vue'
-import Button from '@/components/ButtonItem.vue'
+import Navbar from '../../components/NavbarItem.vue'
+import Input from '../../components/InputItem.vue'
+import Button from '../../components/ButtonItem.vue'
 import { object, string, ref as yupRef } from 'yup';
 import { Form } from 'vee-validate';
-import axios from '@/axios';
-import { AxiosResponse, AxiosError } from 'axios';
-import { VueCookies } from 'vue-cookies';
+import axios from '../../axios';
+import type { AxiosResponse, AxiosError } from 'axios';
+import type { VueCookies } from 'vue-cookies';
 import { inject, reactive } from 'vue';
 import jwt_decode from "jwt-decode";
+import { type Button as ButtonInterface } from '../../components/ButtonItem.vue'
+import { type Input as InputMyData } from '../../components/InputItem.vue'
+
+export interface JwtPayload {
+    Id: number
+    exp: number
+    iat: number
+    roles: Array<string>
+    username: string
+    verifyCode: number
+}
 
 // access vue-cookies
 const $cookies = inject<VueCookies>('$cookies');
-const token = $cookies?.get('token');
-const userId = (jwt_decode(token).Id);
-const headers = { headers: { Authorization: `Bearer ${token}` } } 
-
+const token: string = $cookies?.get('token');
+const userId: number = (jwt_decode<JwtPayload>(token).Id);
+const headers = { headers: { Authorization: `Bearer ${token}` } }
 const formInput = {
     email: "",
     name: "",
     city: "",
-    zip: "",
+    zip: 0,
     telephone: "",
     password: "",
     confirmPW: "",
@@ -44,10 +54,11 @@ const schema = object({
 
 // get input values from child component via emit
 const handleInputUpdate = ({ inputId, newValue }: { inputId: string, newValue: string }) => {
+    // @ts-ignore
     formInput[inputId] = newValue; // Update input values
 };
 
-const inputMyData = reactive([
+const inputMyData: InputMyData[] = reactive([
     {
         id: 'email',
         icon: '<i class="bi bi-envelope-at"></i>',
@@ -100,7 +111,7 @@ const inputMyData = reactive([
 
 ]);
 
-const buttonMyData = [
+const buttonMyData: ButtonInterface[] = [
     {
         id: 1,
         type: 'submit',
@@ -120,60 +131,92 @@ const getMyData = async () => {
     await axios
         .get(`/user/${userId}`, headers)
         .then((res: AxiosResponse) => {
-            console.log(res)
+            console.log(res);
             // response is an array with 1 object
             const data = res.data.response[0];
-            if (res.status = 200) {
-                // loop through object and get key values
-                for (let key in data) {
-                    if (key === 'email') {
-                        email = data[key]
-                    } if (key === 'name') {
-                        name = data[key]
-                    } if (key === 'plz') {
-                        zip = data[key]
-                    } if (key === 'ort') {
-                        city = data[key]
-                    } if (key === 'telefon') {
-                        telephone = data[key]
-                    }
-                }
-                // update inputMyData with new values
-                // trigger reactive rerender
-                inputMyData.forEach(input => {
-                    for (let value in input) {
-                        if (input[value] === 'email') {
-                            input.value = email
-                        } if (input[value] === 'name') {
-                            input.value = name
-                        } if (input[value] === 'zip') {
-                            input.value = zip
-                        } if (input[value] === 'city') {
-                            input.value = city
-                        } if (input[value] === 'telephone') {
-                            input.value = telephone
+            switch (res.status) {
+                case 200:
+                    // loop through object and get key values
+                    for (let key in data) {
+                        switch (key) {
+                            case 'email':
+                                email = data[key];
+                                break;
+                            case 'name':
+                                name = data[key];
+                                break;
+                            case 'plz':
+                                zip = data[key];
+                                break;
+                            case 'ort':
+                                city = data[key];
+                                break;
+                            case 'telefon':
+                                telephone = data[key];
+                                break;
+                            default:
+                                break;
                         }
                     }
-                });
-                for (let key in formInput) {
-                    if (key === 'email') {
-                        formInput[key] = email
-                    } if (key === 'name') {
-                        formInput[key] = name
-                    } if (key === 'zip') {
-                        formInput[key] = zip
-                    } if (key === 'city') {
-                        formInput[key] = city
-                    } if (key === 'telephone') {
-                        formInput[key] = telephone
+
+                    // update inputMyData with new values
+                    // trigger reactive rerender
+                    inputMyData.forEach(input => {
+                        for (let value in input) {
+                            // @ts-ignore
+                            switch (input[value]) {
+                                case 'email':
+                                    input.value = email;
+                                    break;
+                                case 'name':
+                                    input.value = name;
+                                    break;
+                                case 'zip':
+                                    input.value = zip;
+                                    break;
+                                case 'city':
+                                    input.value = city;
+                                    break;
+                                case 'telephone':
+                                    input.value = telephone;
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+
+                    for (let key in formInput) {
+                        switch (key) {
+                            case 'email':
+                                formInput[key] = email;
+                                break;
+                            case 'name':
+                                formInput[key] = name;
+                                break;
+                            case 'zip':
+                                formInput[key] = zip;
+                                break;
+                            case 'city':
+                                formInput[key] = city;
+                                break;
+                            case 'telephone':
+                                formInput[key] = telephone;
+                                break;
+                            default:
+                                break;
+                        }
                     }
-                }
+                    break;
+                default:
+                    break;
             }
         })
         .catch((error: AxiosError) => {
-            console.log(error)
-        })
+            console.log(error);
+        });
 };
+
 getMyData();
 
 
@@ -181,12 +224,13 @@ getMyData();
 const onSubmit = async () => {
     console.log(formInput)
 
-    const data = { email : formInput.email, 
-                    name : formInput.name,
-                    ort : formInput.city,
-                    plz : Number(formInput.zip),
-                    telefon : formInput.telephone,
-                    password : formInput.password            
+    const data = {
+        email: formInput.email,
+        name: formInput.name,
+        ort: formInput.city,
+        plz: Number(formInput.zip),
+        telefon: formInput.telephone,
+        password: formInput.password
     }
 
     await axios
@@ -208,6 +252,6 @@ const onSubmit = async () => {
     <Navbar />
     <Form @submit="onSubmit" :validation-schema="schema">
         <Input :inputs="inputMyData" @input="handleInputUpdate" />
-        <Button :buttons="buttonMyData" />
+        <Button :buttons="buttonMyData"></Button>
     </Form>
 </template>

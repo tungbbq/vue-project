@@ -1,8 +1,8 @@
 <script setup lang="ts">
 
-interface Button {
+export interface Button {
   id: number;
-  type: string;
+  type: 'submit' | 'reset' | 'button';
   name: string;
 }
 

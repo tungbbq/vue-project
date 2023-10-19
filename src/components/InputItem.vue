@@ -2,13 +2,14 @@
 import { Field, ErrorMessage } from 'vee-validate';
 import { toRefs, computed, watch, ref } from 'vue';
 
-interface Input {
-  id: string;
-  icon: string;
-  type: string;
-  name: string;
-  value?: string;
-}  
+export interface Input {
+        id: string,
+        icon: string,
+        type: string,
+        name: string,
+        value: string | number 
+}
+
 // get input values from parent via props
 const props = defineProps<{ inputs: Input[] }>();
 
