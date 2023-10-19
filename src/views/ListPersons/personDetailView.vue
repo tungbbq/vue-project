@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import Navbar from '@/components/NavbarItem.vue'
-import Input from '@/components/InputItem.vue'
-import Button from '@/components/ButtonItem.vue'
+import Navbar from '../../components/NavbarItem.vue'
+import Input from '../../components/InputItem.vue'
+import Button from '../../components/ButtonItem.vue'
 import { object, string, ref as yupRef } from 'yup';
 import { Form } from 'vee-validate';
-import axios from '@/axios';
-import { AxiosResponse, AxiosError } from 'axios';
-import { VueCookies } from 'vue-cookies';
+import axios from '../../axios';
+import type { AxiosResponse, AxiosError } from 'axios';
+import type { VueCookies } from 'vue-cookies';
 import { inject, reactive } from 'vue';
 import jwt_decode from "jwt-decode";
 import { useRoute } from 'vue-router';

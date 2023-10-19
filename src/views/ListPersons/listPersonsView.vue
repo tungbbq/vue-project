@@ -11,6 +11,15 @@ import jwt_decode from "jwt-decode";
 import {  useRouter } from 'vue-router';
 import type { JwtPayload } from '../MyData/myDataView.vue';
 
+export interface User {
+    email: string,
+    id: number,
+    name: string,
+    ort: string,
+    plz: number,
+    roles: Array<string>,
+    telefon: string
+}
 
 const $cookies = inject<VueCookies>('$cookies');
 const token = $cookies?.get('token');
@@ -18,7 +27,7 @@ const userId = (jwt_decode<JwtPayload>(token).Id);
 const headers = { headers: { Authorization: `Bearer ${token}` } }
 
 const router = useRouter();
-const users = ref([])
+const users = ref<Array<User>>([])
 // Define the table columns and their keys
 const tableColumns = [
   { label: 'Name', key: 'name' },
@@ -57,6 +66,7 @@ const updatePagination = (newPage: number) => {
         await axios
             .get(`/page/${newPage}`, headers)
             .then((res: AxiosResponse) => {
+                console.log(res.data.response)
                 users.value = res.data.response
                 currentPage.value = newPage
 
