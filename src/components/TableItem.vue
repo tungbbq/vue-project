@@ -31,16 +31,32 @@ const sortedUsers = computed(() => {
   const usersCopy = [...props.users];
   if (sortColumnIndex.value !== null) {
     const columnKey = props.tableColumns[sortColumnIndex.value].key;
+    
     if (sortOrder.value === 'asc') {
-          // @ts-ignore
-      return usersCopy.sort((a, b) => a[columnKey].localeCompare(b[columnKey]));
+      return usersCopy.sort((a:any, b:any) => {
+        // Use localeCompare for string values, and subtraction for numeric values
+        if (typeof a[columnKey] === 'string' && typeof b[columnKey] === 'string') {
+          return a[columnKey].localeCompare(b[columnKey]);
+        } else if (typeof a[columnKey] === 'number' && typeof b[columnKey] === 'number') {
+          return a[columnKey] - b[columnKey];
+        }
+        // If types don't match
+        return 0; // Handle this case as needed
+      });
     } else if (sortOrder.value === 'desc') {
-          // @ts-ignore
-      return usersCopy.sort((a, b) => b[columnKey].localeCompare(a[columnKey]));
+      return usersCopy.sort((a: any, b: any) => {
+        if (typeof a[columnKey] === 'string' && typeof b[columnKey] === 'string') {
+          return b[columnKey].localeCompare(a[columnKey]);
+        } else if (typeof a[columnKey] === 'number' && typeof b[columnKey] === 'number') {
+          return b[columnKey] - a[columnKey];
+        }
+        return 0;
+      });
     }
   }
   return usersCopy;
 });
+
 
 // Method to toggle the sorting order for a specific column
 const sortColumn = (column: TableColum) => {

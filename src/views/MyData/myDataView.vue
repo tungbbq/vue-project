@@ -11,6 +11,11 @@ import { inject, reactive } from 'vue';
 import jwt_decode from "jwt-decode";
 import { type Button as ButtonInterface } from '../../components/ButtonItem.vue'
 import { type Input as InputMyData } from '../../components/InputItem.vue'
+import { useRoute } from 'vue-router';
+
+const route = useRoute();
+let inputMyData:InputMyData[] = [];
+let buttonMyData: ButtonInterface[] = [];
 
 export interface JwtPayload {
     Id: number
@@ -20,11 +25,11 @@ export interface JwtPayload {
     username: string
     verifyCode: number
 }
-
 // access vue-cookies
 const $cookies = inject<VueCookies>('$cookies');
 const token: string = $cookies?.get('token');
-const userId: number = (jwt_decode<JwtPayload>(token).Id);
+const roles = jwt_decode<JwtPayload>(token).roles
+
 const headers = { headers: { Authorization: `Bearer ${token}` } }
 const formInput = {
     email: "",
@@ -36,8 +41,162 @@ const formInput = {
     confirmPW: "",
 };
 
+// TODO: messages
+const onSubmit = async () => {
+    const data = {
+        email: formInput.email,
+        name: formInput.name,
+        ort: formInput.city,
+        plz: Number(formInput.zip),
+        telefon: formInput.telephone,
+        password: formInput.password
+    }
+
+    await axios
+        .put(`/user/${userId}`, data, headers)
+        .then((res: AxiosResponse) => {
+            if (res.status = 200) {
+                console.log(res)
+            }
+        })
+        .catch((error: AxiosError) => {
+            console.log(error)
+        })
+};
+
+let initialInputs: InputMyData[] = reactive([
+    {
+        id: 'email',
+        icon: '<i class="bi bi-envelope-at"></i>',
+        type: 'text',
+        name: 'E-Mail',
+        disabled: false,
+        value: ''
+    },
+    {
+        id: 'name',
+        icon: '<i class="bi bi-person-circle"></i>',
+        type: 'text',
+        name: 'Name',
+        disabled: false,
+        value: ''
+    },
+    {
+        id: 'city',
+        icon: '<i class="bi bi-geo-alt"></i>',
+        type: 'text',
+        name: 'Ort',
+        disabled: false,
+        value: ''
+    },
+    {
+        id: 'zip',
+        icon: '<i class="bi bi-postcard"></i>',
+        type: 'text',
+        name: 'PLZ',
+        disabled: false,
+        value: ''
+    },
+    {
+        id: 'telephone',
+        icon: '<i class="bi bi-telephone"></i>',
+        type: 'text',
+        name: 'Telefon',
+        disabled: false,
+        value: ''
+    },
+    {
+        id: 'password',
+        icon: '<i class="bi bi-lock"></i>',
+        type: 'password',
+        name: 'Passwort',
+        disabled: false,
+        value: ''
+    },
+    {
+        id: 'confirmPW',
+        icon: '<i class="bi bi-lock"></i>',
+        type: 'password',
+        name: 'Passwort Wiederholung',
+        disabled: false,
+        value: ''
+    },
+
+]);
+
+
+let initialButtons: ButtonInterface[] = [
+    {
+        id: 1,
+        type: 'button',
+        name: 'Aktualisieren',
+        function: 'submit'
+    }
+];
+
+// check if url id parameter exist, if true then we are in listpersons
+// else we are in mydata and use cookie user id
+const userId = (() => {
+    if (route.params.id) {
+        console.log(roles)
+        let filterButtons: ButtonInterface[] = []
+        let filterInitialInputs = initialInputs
+        // add submit button from initialButtons
+        if (roles.includes('ROLE_UPDATE')){
+            filterButtons = initialButtons
+        }
+        // add delete button
+        if (roles.includes('ROLE_DELETE'))
+            filterButtons.push({
+                id: 2,
+                type: 'button',
+                name: 'Löschen',
+                function: 'delete'
+            })
+          
+        // if user has no update right, disable inputs   
+        if (!roles.includes('ROLE_UPDATE')) {
+            buttonMyData = []
+            filterInitialInputs = filterInitialInputs.filter((item) => {
+                item.disabled = true
+                return item.id !== 'password' && item.id !== 'confirmPW'
+            });
+        }
+        inputMyData = filterInitialInputs
+        buttonMyData = filterButtons
+        return Number(route.params.id);
+    } else {
+        inputMyData = initialInputs
+        buttonMyData = initialButtons
+        return jwt_decode<JwtPayload>(token).Id;
+    }
+})();
+
+// TODO: messages
+const deleteUser = (async () => {
+    await axios
+        .delete(`/user/${userId}`, headers)
+        .then((res: AxiosResponse) => {
+            if (res.status = 200) {
+                console.log(res)
+            }
+        })
+        .catch((error: AxiosError) => {
+            console.log(error)
+        })
+})
+
+const handleButtonEmit = (task: string) => {
+    console.log(task)
+    if (task === 'submit') {
+        onSubmit()
+    } else if (task === 'delete') {
+        deleteUser()
+    }
+}
+
 // regex pattern for custom validation
-const telephoneNumberRegex = /^(?:\+\d{1,3}\s?)?\(?\d{3}\)?[-./\s]?\d{3}[-./\s]?\d{4}$|^\d+$/;
+const telephoneNumberRegex = /^[\d\s+\-.()]+$/;
 const zipCodeRegex = /^\d{5}$/;
 
 // validation schema
@@ -58,70 +217,9 @@ const handleInputUpdate = ({ inputId, newValue }: { inputId: string, newValue: s
     formInput[inputId] = newValue; // Update input values
 };
 
-const inputMyData: InputMyData[] = reactive([
-    {
-        id: 'email',
-        icon: '<i class="bi bi-envelope-at"></i>',
-        type: 'text',
-        name: 'E-Mail',
-        value: ''
-    },
-    {
-        id: 'name',
-        icon: '<i class="bi bi-person-circle"></i>',
-        type: 'text',
-        name: 'Name',
-        value: ''
-    },
-    {
-        id: 'city',
-        icon: '<i class="bi bi-geo-alt"></i>',
-        type: 'text',
-        name: 'Ort',
-        value: ''
-    },
-    {
-        id: 'zip',
-        icon: '<i class="bi bi-postcard"></i>',
-        type: 'text',
-        name: 'PLZ',
-        value: ''
-    },
-    {
-        id: 'telephone',
-        icon: '<i class="bi bi-telephone"></i>',
-        type: 'text',
-        name: 'Telefon',
-        value: ''
-    },
-    {
-        id: 'password',
-        icon: '<i class="bi bi-lock"></i>',
-        type: 'password',
-        name: 'Passwort',
-        value: ''
-    },
-    {
-        id: 'confirmPW',
-        icon: '<i class="bi bi-lock"></i>',
-        type: 'password',
-        name: 'Passwort Wiederholung',
-        value: ''
-    },
 
-]);
-
-const buttonMyData: ButtonInterface[] = [
-    {
-        id: 1,
-        type: 'submit',
-        name: 'aktualisieren'
-    }
-];
-
-// TODO: switch case instead of if condition
 // get user data
-const getMyData = async () => {
+const getMyData = (async () => {
     let email: string;
     let name: string;
     let zip: number;
@@ -215,43 +313,18 @@ const getMyData = async () => {
         .catch((error: AxiosError) => {
             console.log(error);
         });
-};
+});
 
 getMyData();
 
-
-// TODO: messages
-const onSubmit = async () => {
-    console.log(formInput)
-
-    const data = {
-        email: formInput.email,
-        name: formInput.name,
-        ort: formInput.city,
-        plz: Number(formInput.zip),
-        telefon: formInput.telephone,
-        password: formInput.password
-    }
-
-    await axios
-        .put(`/user/${userId}`, data, headers)
-        .then((res: AxiosResponse) => {
-            if (res.status = 200) {
-                console.log(res)
-            }
-        })
-        .catch((error: AxiosError) => {
-            console.log(error)
-        })
-};
 
 </script>
 
 <template>
     <h4> MyData</h4>
     <Navbar />
-    <Form @submit="onSubmit" :validation-schema="schema">
+    <Form :validation-schema="schema">
         <Input :inputs="inputMyData" @input="handleInputUpdate" />
-        <Button :buttons="buttonMyData"></Button>
+        <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
     </Form>
 </template>

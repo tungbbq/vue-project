@@ -2,6 +2,7 @@ import './assets/main.css'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
+// @ts-ignore
 import router from './router'
 import VueCookies from 'vue-cookies'
 import "bootstrap/dist/css/bootstrap.min.css"

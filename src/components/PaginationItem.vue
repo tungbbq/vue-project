@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
-const props = defineProps({
-  currentPage: Number,
-  totalPages: Number,
-  maxVisibleButtons: Number,
+interface Props {
+  currentPage: number,
+  totalPages: number,
+  maxVisibleButtons: number,
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  currentPage: 1,
+  totalPages: 10,
+  maxVisibleButtons: 3,
 });
 
 const emits = defineEmits(['pagechanged']);
@@ -20,7 +26,7 @@ const onClickPreviousPage = () => {
   emits('pagechanged', (props.currentPage - 1));
 };
 
-const onClickPage = (page) => {
+const onClickPage = (page: number) => {
   emits('pagechanged', (page));
 };
 

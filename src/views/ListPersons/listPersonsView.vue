@@ -30,8 +30,8 @@ const router = useRouter();
 const users = ref<Array<User>>([])
 // Define the table columns and their keys
 const tableColumns = [
-  { label: 'Name', key: 'name' },
   { label: 'E-Mail', key: 'email' },
+  { label: 'Name', key: 'name' },
   { label: 'Ort', key: 'ort' },
   { label: 'Postleitzahl', key: 'plz' },
   { label: 'Telefon', key: 'telefon' },

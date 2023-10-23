@@ -4,15 +4,18 @@ export interface Button {
   id: number;
   type: 'submit' | 'reset' | 'button';
   name: string;
+  function: string
 }
 
 defineProps<{
   buttons?: Button[]
 }>()
 
+defineEmits(['buttonClick'])
+
 </script>
 <template>
     <div class="text-center" v-for="button of buttons" :key="button.id">
-        <button :type="button.type" class="btn btn-primary">{{ button.name }}</button>
+        <button @click="$emit('buttonClick', button.function)" :type="button.type" class="btn btn-primary">{{ button.name }}</button>
     </div>
 </template>

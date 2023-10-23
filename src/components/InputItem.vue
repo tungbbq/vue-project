@@ -7,6 +7,7 @@ export interface Input {
         icon: string,
         type: string,
         name: string,
+        disabled: boolean,
         value: string | number 
 }
 
@@ -33,6 +34,7 @@ const handleInputUpdate = (inputId: string, newValue: string) => {
       class="form-control"
       :placeholder="input.name"
       @input="handleInputUpdate(input.id, $event.target.value)"
+      :disabled="input.disabled"
     />
     <ErrorMessage 
     class='form-control is-invalid' 
