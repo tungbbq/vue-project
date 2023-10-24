@@ -8,8 +8,8 @@ import { inject, reactive } from 'vue'
 import type { VueCookies } from 'vue-cookies';
 import jwt_decode from "jwt-decode";
 import { type JwtPayload } from '../MyData/myDataView.vue'
-import axios from '../../axios';
-import type { AxiosResponse, AxiosError } from 'axios';
+
+import { useRouter } from 'vue-router'
 
 const formInput = {
         email: "",
@@ -74,40 +74,34 @@ let buttonMyData: ButtonInterface[] = [
         }
 ];
 
+const router = useRouter();
 const $cookies = inject<VueCookies>('$cookies');
 const token: string = $cookies?.get('token');
 const roles = jwt_decode<JwtPayload>(token).roles
 
-const headers = { headers: { Authorization: `Bearer ${token}` } }
+
 
 const handleInputUpdate = ({ inputId, newValue }: { inputId: string, newValue: string }) => {
         // @ts-ignore
         formInput[inputId] = newValue; // Update input values
 };
 
-const handleButtonEmit = async (task: string) => {
+const handleButtonEmit = (task: string) => {
         // TODO
         if (task === 'search') {
-                console.log('search')
                 const data = {
                         email: formInput.email,
                         name: formInput.name,
                         ort: formInput.city,
-                        plz: Number(formInput.zip),
+                        plz: formInput.zip,
                         telefon: formInput.telephone,
                         password: formInput.password
                 }
-                console.log(data)
-                await axios
-                        .post('/user/search', data, headers)
-                        .then((res: AxiosResponse) => {
-                                if (res.status = 200) {
-                                        console.log(res)
-                                }
-                        })
-                        .catch((error: AxiosError) => {
-                                console.log(error)
-                        })
+                router.push({
+                        name: 'searchResults',
+                        query: data, // Pass the search data as query parameters
+                });
+
         }
 }
 

@@ -8,7 +8,7 @@ import type { AxiosResponse, AxiosError } from 'axios';
 import type { VueCookies } from 'vue-cookies';
 import { inject, ref } from 'vue';
 import jwt_decode from "jwt-decode";
-import {  useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import type { JwtPayload } from '../MyData/myDataView.vue';
 
 export interface User {
@@ -27,39 +27,36 @@ const userId = (jwt_decode<JwtPayload>(token).Id);
 const headers = { headers: { Authorization: `Bearer ${token}` } }
 
 const router = useRouter();
+const route = useRoute();
 const users = ref<Array<User>>([])
 // Define the table columns and their keys
 const tableColumns = [
-  { label: 'E-Mail', key: 'email' },
-  { label: 'Name', key: 'name' },
-  { label: 'Ort', key: 'ort' },
-  { label: 'Postleitzahl', key: 'plz' },
-  { label: 'Telefon', key: 'telefon' },
+    { label: 'E-Mail', key: 'email' },
+    { label: 'Name', key: 'name' },
+    { label: 'Ort', key: 'ort' },
+    { label: 'Postleitzahl', key: 'plz' },
+    { label: 'Telefon', key: 'telefon' },
 ];
 
-const totalCountUsers = ref(0)
-const maxVisibleButtons = 3
-const perPages = 10
-const totalPages = ref(0)
-const currentPage = ref(1)
+const totalCountUsers = ref(0);
+const maxVisibleButtons = 3;
+const perPages = 10;
+const totalPages = ref(1);
+const currentPage = ref(1);
 
-const getTotalRecords = async () => {
+const getTotalPages = async () => {
     await axios
         .get(`/pagination`, headers)
         .then((res: AxiosResponse) => {
             totalCountUsers.value = res.data
             totalPages.value = Math.ceil(totalCountUsers.value / perPages)
-            updatePagination(currentPage.value)
 
-            if (res.status = 200) {
-                // loop through object and get key values
-            }
         })
         .catch((error: AxiosError) => {
             console.log(error)
         })
+        updatePagination(currentPage.value)
 };
-getTotalRecords();
 
 const updatePagination = (newPage: number) => {
     const getNewPage = async () => {
@@ -69,39 +66,61 @@ const updatePagination = (newPage: number) => {
                 console.log(res.data.response)
                 users.value = res.data.response
                 currentPage.value = newPage
-
-                if (res.status = 200) {
-                    // loop through object and get key values
-                }
             })
             .catch((error: AxiosError) => {
                 console.log(error)
             })
     }
     getNewPage();
-
 }
 
-const showUser = (id: number) =>
-{
+const showUser = (id: number) => {
     console.log(id)
-    router.push({ name: 'person', params: { id}});
+    router.push({ name: 'person', params: { id } });
 }
+
+const searchResults = () => {
+    // get query from url string
+    // cast to number
+    let searchQuery = {}
+    searchQuery = { ...route.query }
+    for (const key in searchQuery) {
+        if (key === 'plz') {
+            // @ts-ignore
+            searchQuery[key] = Number(searchQuery[key])
+        }
+    }
+    const getSearchResults = async () => {
+        await axios
+            .post('/user/search', searchQuery, headers)
+            .then((res: AxiosResponse) => {
+                if (res.status = 200) {
+                    users.value = res.data.response
+                }
+            })
+            .catch((error: AxiosError) => {
+                console.log(error)
+            })
+        }
+    getSearchResults()
+}
+
+(() => {
+    if (Object.keys(route.query).length !== 0) {
+        console.log('search')
+        searchResults();
+    } else if (Object.keys(route.query).length === 0) {
+        console.log('update')
+        getTotalPages();
+    }
+})();
 
 </script>
 
 <template>
     <h4> ListPersons</h4>
     <Navbar />
-    <Table 
-        :users="users"
-        :tableColumns="tableColumns"
-        @user-clicked="showUser"
-    />
-    <Pagination 
-        :maxVisibleButtons="maxVisibleButtons" 
-        :totalPages="totalPages" 
-        :perPages="perPages"
-        :currentPage="currentPage" 
-        @pagechanged="updatePagination" />
+    <Table :users="users" :tableColumns="tableColumns" @user-clicked="showUser" />
+    <Pagination :maxVisibleButtons="maxVisibleButtons" :totalPages="totalPages" :perPages="perPages"
+        :currentPage="currentPage" @pagechanged="updatePagination" />
 </template>

@@ -55,7 +55,13 @@ const router = createRouter({
           name: 'person',
           component: MyData,
           meta: { requiresAuth: true }
-      }
+      },
+      {
+        path: '/searchResults',
+        name: 'searchResults',
+        component: ListPersons,
+        meta: { requiresAuth: true }
+    }
     ]
 });
 
