@@ -16,13 +16,13 @@ const logOut = () => {
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-md navbar-light fixed-top flex-column flex-md-row bd-navbar " >
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
             aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="/">Skygate</a>
+            <a class="navbar-brand" href="/"><img src="../assets/skygate-logo.0d9d427a.svg" width="150" height="60"></a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item">
                     <router-link class="nav-link" to="/mydata">My Data</router-link>
@@ -35,7 +35,7 @@ const logOut = () => {
                 </li>
             </ul>
 
-            <button @click="logOut" class="btn btn-outline-success my-2 my-sm-0" type="button">Logout</button>
+            <button @click="logOut" class="btn btn-outline-light my-2 my-sm-0" type="button">Logout</button>
 
         </div>
     </nav>
