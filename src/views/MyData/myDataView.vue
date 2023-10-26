@@ -7,7 +7,7 @@ import { Form } from 'vee-validate';
 import axios from '../../axios';
 import type { AxiosResponse, AxiosError } from 'axios';
 import type { VueCookies } from 'vue-cookies';
-import { inject, reactive } from 'vue';
+import { inject, reactive, ref } from 'vue';
 import jwt_decode from "jwt-decode";
 import { type Button as ButtonInterface } from '../../components/ButtonItem.vue'
 import { type Input as InputMyData } from '../../components/InputItem.vue'
@@ -31,6 +31,7 @@ const token: string = $cookies?.get('token');
 const roles = jwt_decode<JwtPayload>(token).roles
 
 const headers = { headers: { Authorization: `Bearer ${token}` } }
+const form = ref(null);
 const formInput = {
     email: "",
     name: "",
@@ -43,6 +44,12 @@ const formInput = {
 
 // TODO: messages
 const onSubmit = async () => {
+    if (form.value) {
+        // @ts-ignore
+        await form.value.validate();
+        // @ts-ignore
+        if (Object.keys(form.value.getErrors()).length === 0) {
+
     const data = {
         email: formInput.email,
         name: formInput.name,
@@ -62,6 +69,8 @@ const onSubmit = async () => {
         .catch((error: AxiosError) => {
             console.log(error)
         })
+    }
+}
 };
 
 let initialInputs: InputMyData[] = reactive([
@@ -323,7 +332,7 @@ getMyData();
 <template>
     <h4> MyData</h4>
     <Navbar />
-    <Form :validation-schema="schema">
+    <Form ref='form' :validation-schema="schema">
         <Input :inputs="inputMyData" @input="handleInputUpdate" />
         <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
     </Form>
