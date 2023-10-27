@@ -330,10 +330,12 @@ getMyData();
 </script>
 
 <template>
+    <div>
     <h4> MyData</h4>
     <Navbar />
     <Form ref='form' :validation-schema="schema">
         <Input :inputs="inputMyData" @input="handleInputUpdate" />
         <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
     </Form>
+</div>
 </template>

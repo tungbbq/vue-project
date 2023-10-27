@@ -16,27 +16,27 @@ const logOut = () => {
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-md navbar-light fixed-top flex-column flex-md-row bd-navbar " >
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
-            aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/"><img src="../assets/skygate-logo.0d9d427a.svg" width="150" height="60"></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="/"><img src="../assets/skygate-logo.0d9d427a.svg" width="150" height="60"></a>
-            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-                <li class="nav-item">
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
                     <router-link class="nav-link" to="/mydata">My Data</router-link>
                 </li>
                 <li class="nav-item">
                     <router-link class="nav-link" to="/listpersons">List Persons</router-link>
                 </li>
-                <li class="nav-item">
+                <li class="nav-item dropdown">
                     <router-link class="nav-link" to="/search">Search</router-link>
                 </li>
+
             </ul>
-
-            <button @click="logOut" class="btn btn-outline-light my-2 my-sm-0" type="button">Logout</button>
-
+                <button @click="logOut" class="btn btn-outline-primary align-items-end" type="button">Logout</button>
         </div>
     </nav>
 </template>
