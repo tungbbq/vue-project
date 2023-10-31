@@ -16,8 +16,9 @@ const logOut = () => {
 </script>
 
 <template>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/"><img src="../assets/skygate-logo.0d9d427a.svg" width="150" height="60"></a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light py-3 shadow p-3 mb-5 bg-white rounded">
+        <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img src="../assets/skygate-logo.0d9d427a.svg" width="180" height="60"></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
             aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -36,7 +37,8 @@ const logOut = () => {
                 </li>
 
             </ul>
-                <button @click="logOut" class="btn btn-outline-primary align-items-end" type="button">Logout</button>
+                <button @click="logOut" class="btn btn-outline-primary ms-auto " type="button">Logout</button>
+        </div>
         </div>
     </nav>
 </template>

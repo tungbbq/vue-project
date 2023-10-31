@@ -330,9 +330,10 @@ getMyData();
 </script>
 
 <template>
-    <div>
-    <h4> MyData</h4>
+
+
     <Navbar />
+    <div class="container d-flex justify-content-center align-items-center">
     <Form ref='form' :validation-schema="schema">
         <Input :inputs="inputMyData" @input="handleInputUpdate" />
         <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
