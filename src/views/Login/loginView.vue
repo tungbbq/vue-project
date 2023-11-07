@@ -16,7 +16,7 @@ const formInput = {
     password: "",
 };
 
-const $cookies = inject<VueCookies>('$cookies'); 
+const $cookies = inject<VueCookies>('$cookies');
 const router = useRouter()
 
 // validation schema
@@ -53,28 +53,28 @@ const buttonLogin: ButtonInterface[] = [
     {
         id: 1,
         type: 'button',
-        name: 'login',
+        name: 'Login',
         function: 'submit'
     }
 ];
 // save user information in cookie
 // TODO: messages
-const onSubmit = async ()=> {
-console.log(formInput)
-await axios
+const onSubmit = async () => {
+    console.log(formInput)
+    await axios
         .post('/login_check', {
             email: formInput.email,
             password: formInput.password
         })
         .then((res: AxiosResponse) => {
-            if (res.status === 200 && $cookies){
-               $cookies.set('refresh_token', res.data.refresh_token)
-               $cookies.set('token', res.data.token)
-               router.push({ path: '/' })
+            if (res.status === 200 && $cookies) {
+                $cookies.set('refresh_token', res.data.refresh_token)
+                $cookies.set('token', res.data.token)
+                router.push({ path: '/' })
             }
         })
         .catch((error: AxiosError) => {
-console.log(error)
+            console.log(error)
         })
 };
 
@@ -87,13 +87,43 @@ const handleButtonEmit = (task: string) => {
 </script>
 
 <template>
-    <h4 class="display-4"> Login</h4>
-    <Form :validation-schema="schema">
-        <Input :inputs="inputLogin" @input="handleInputUpdate"/>
-        <Button :buttons="buttonLogin" @buttonClick="handleButtonEmit" />
-    </Form>
-    <div>
-        <p>Noch nicht angemeldet?</p>
-        <p><router-link to="/registration">Hier klicken</router-link> um sich zu registrieren.</p>
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center vh-100">
+      <div class="row">
+        <!-- Left side with the image (25% width) -->
+        <div class="col-md-2 d-flex justify-content-center align-items-center">
+          <!-- Use 'd-flex justify-content-center align-items-center' classes -->
+          <img src="../../assets/skygate-logo.0d9d427a.svg" class="mb-4" width="185" height="80">
+        </div>
+        <!-- Middle side | -->
+        <div class="col-md-2">
+
+        </div>
+        <!-- Right side with the content (75% width) -->
+        <div class="col-md-8 mt-4">
+          <!-- Add 'mt-4' class for top margin to create space -->
+          <div class="container h-50">
+            <div class="col-lg-12 mx-auto">
+              <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                  <h4 class="display-6 mb-4 "> Login</h4>
+  
+                  <Form :validation-schema="schema">
+                    <Input :inputs="inputLogin" @input="handleInputUpdate" />
+                    <Button :buttons="buttonLogin" @buttonClick="handleButtonEmit" />
+                  </Form>
+                  <hr class="my-4">
+                  <div class="text-center">
+                    <p>Noch nicht angemeldet? <br>
+                      <router-link to="/registration">Hier klicken</router-link> um sich zu registrieren.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</template>
+  </template>
+  
+  

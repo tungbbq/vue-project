@@ -14,7 +14,7 @@ import { type Input as InputMyData } from '../../components/InputItem.vue'
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-let inputMyData:InputMyData[] = [];
+let inputMyData: InputMyData[] = [];
 let buttonMyData: ButtonInterface[] = [];
 
 export interface JwtPayload {
@@ -50,27 +50,27 @@ const onSubmit = async () => {
         // @ts-ignore
         if (Object.keys(form.value.getErrors()).length === 0) {
 
-    const data = {
-        email: formInput.email,
-        name: formInput.name,
-        ort: formInput.city,
-        plz: Number(formInput.zip),
-        telefon: formInput.telephone,
-        password: formInput.password
-    }
-
-    await axios
-        .put(`/user/${userId}`, data, headers)
-        .then((res: AxiosResponse) => {
-            if (res.status = 200) {
-                console.log(res)
+            const data = {
+                email: formInput.email,
+                name: formInput.name,
+                ort: formInput.city,
+                plz: Number(formInput.zip),
+                telefon: formInput.telephone,
+                password: formInput.password
             }
-        })
-        .catch((error: AxiosError) => {
-            console.log(error)
-        })
+
+            await axios
+                .put(`/user/${userId}`, data, headers)
+                .then((res: AxiosResponse) => {
+                    if (res.status = 200) {
+                        console.log(res)
+                    }
+                })
+                .catch((error: AxiosError) => {
+                    console.log(error)
+                })
+        }
     }
-}
 };
 
 let initialInputs: InputMyData[] = reactive([
@@ -151,7 +151,7 @@ const userId = (() => {
         let filterButtons: ButtonInterface[] = []
         let filterInitialInputs = initialInputs
         // add submit button from initialButtons
-        if (roles.includes('ROLE_UPDATE')){
+        if (roles.includes('ROLE_UPDATE')) {
             filterButtons = initialButtons
         }
         // add delete button
@@ -162,7 +162,7 @@ const userId = (() => {
                 name: 'Löschen',
                 function: 'delete'
             })
-          
+
         // if user has no update right, disable inputs   
         if (!roles.includes('ROLE_UPDATE')) {
             buttonMyData = []
@@ -330,13 +330,19 @@ getMyData();
 </script>
 
 <template>
-
-
     <Navbar />
-    <div class="container d-flex justify-content-center align-items-center">
-    <Form ref='form' :validation-schema="schema">
-        <Input :inputs="inputMyData" @input="handleInputUpdate" />
-        <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
-    </Form>
-</div>
+    <div
+        class="container-fluid h-75 shadow p-3 mb-5 bg-white rounded col-12 d-flex align-items-center justify-content-center">
+
+        <div class="col-3 mx-auto">
+            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                <div class="col p-4 d-flex flex-column position-static">
+                    <Form ref="form" :validation-schema="schema">
+                        <Input :inputs="inputMyData" @input="handleInputUpdate" />
+                    </Form>
+                </div>
+                <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
+            </div>
+        </div>
+    </div>
 </template>

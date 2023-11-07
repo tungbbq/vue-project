@@ -25,8 +25,9 @@ const handleInputUpdate = (inputId: string, newValue: string) => {
 </script>
 
 <template>
-  <div class="input-group mb-3" v-for="input of inputs" :key="input.id">
+  <div class="input-group mb-2" v-for="input of inputs" :key="input.id">
     <span class="input-group-text" :id="input.name" v-html="input.icon"></span>
+
     <Field
       :name="input.id"
       :type="input.type"

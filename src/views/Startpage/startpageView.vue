@@ -10,7 +10,7 @@ import Navbar from '@/components/NavbarItem.vue'
   ">
       <Navbar />
       <div class="align-items-center h-75 row">
-        <h1 class="display-4 text-center text-light">HERZLICH WILKOMMEN</h1>
+        <h1 class="display-4 text-center text-light">herzlich willkommen</h1>
       </div>
     </div>
   </div>

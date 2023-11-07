@@ -168,6 +168,7 @@ const handleButtonEmit = (task: string) => {
 </script>
 
 <template>
+       <div class="container-fluid d-flex flex-column align-items-center justify-content-center vh-100">
     <main>
         <h1 class="display-5 text-center align-middle">Registration</h1>
         <Form ref='form' :validation-schema="schema">
@@ -194,4 +195,5 @@ const handleButtonEmit = (task: string) => {
             <Button :buttons="buttonRegistration" @buttonClick="handleButtonEmit" />
         </Form>
     </main>
+</div>
 </template>

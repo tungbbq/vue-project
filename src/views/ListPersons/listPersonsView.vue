@@ -118,7 +118,6 @@ const searchResults = () => {
 </script>
 
 <template>
-    <h4> ListPersons</h4>
     <Navbar />
     <Table :users="users" :tableColumns="tableColumns" @user-clicked="showUser" />
     <Pagination :maxVisibleButtons="maxVisibleButtons" :totalPages="totalPages" :perPages="perPages"

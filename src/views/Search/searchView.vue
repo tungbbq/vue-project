@@ -108,7 +108,6 @@ const handleButtonEmit = (task: string) => {
 </script>
 
 <template>
-        <h4> Search</h4>
         <Navbar />
         <Input :inputs="inputMyData" @input="handleInputUpdate" />
         <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit" />
