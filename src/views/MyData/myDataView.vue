@@ -30,6 +30,8 @@ const $cookies = inject<VueCookies>('$cookies');
 const token: string = $cookies?.get('token');
 const roles = jwt_decode<JwtPayload>(token).roles
 
+let feedback = ref<string | null>(null);
+
 const headers = { headers: { Authorization: `Bearer ${token}` } }
 const form = ref(null);
 const formInput = {
@@ -40,6 +42,7 @@ const formInput = {
     telephone: "",
     password: "",
     confirmPW: "",
+    roles: []
 };
 
 // TODO: messages
@@ -63,7 +66,7 @@ const onSubmit = async () => {
                 .put(`/user/${userId}`, data, headers)
                 .then((res: AxiosResponse) => {
                     if (res.status = 200) {
-                        console.log(res)
+                        feedback.value = 'Die Daten wurde erfolgreich aktualisiert.';
                     }
                 })
                 .catch((error: AxiosError) => {
@@ -318,6 +321,7 @@ const getMyData = (async () => {
                 default:
                     break;
             }
+
         })
         .catch((error: AxiosError) => {
             console.log(error);
@@ -326,22 +330,37 @@ const getMyData = (async () => {
 
 getMyData();
 
+const closeAlert = (() => {
+    feedback.value = null;
+})
 
 </script>
 
 <template>
-    <Navbar />
-    <div
-        class="container-fluid h-75 shadow p-3 mb-5 bg-white rounded col-12 d-flex align-items-center justify-content-center">
+    <div class="row">
+        <div class="vh-100">
+            <Navbar />
+            <div
+                class="container-fluid h-75 shadow p-3 mb-5 bg-white rounded col-12 d-flex align-items-center justify-content-center">
+                <div class="col-4 mx-auto">
 
-        <div class="col-3 mx-auto">
-            <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-                <div class="col p-4 d-flex flex-column position-static">
-                    <Form ref="form" :validation-schema="schema">
-                        <Input :inputs="inputMyData" @input="handleInputUpdate" />
-                    </Form>
+                    <div v-if="feedback" class="alert alert-success alert-dismissible fade show d-flex align-items-center"
+                        role="alert">
+                        <button type="button" class="btn-close" @click="closeAlert()" data-bs-dismiss="alert"
+                            aria-label="Close"></button>
+                        {{ feedback }}
+                    </div>
+
+                    <div
+                        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                        <div class="col p-4 d-flex flex-column position-static">
+                            <Form ref="form" :validation-schema="schema">
+                                <Input :inputs="inputMyData" @input="handleInputUpdate" />
+                            </Form>
+                            <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
+                        </div>
+                    </div>
                 </div>
-                <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit"></Button>
             </div>
         </div>
     </div>

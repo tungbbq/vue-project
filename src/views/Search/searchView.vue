@@ -108,7 +108,19 @@ const handleButtonEmit = (task: string) => {
 </script>
 
 <template>
-        <Navbar />
-        <Input :inputs="inputMyData" @input="handleInputUpdate" />
-        <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit" />
+        <div class="row vh-100">
+                <div class="vh-100">
+                        <Navbar />
+                        <div
+                                class="container-fluid h-75 shadow p-3 mb-5 bg-white rounded col-12 d-flex align-items-center justify-content-center">
+                                <div
+                                        class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                                        <div class="col p-4 d-flex flex-column position-static">
+                                                <Input :inputs="inputMyData" @input="handleInputUpdate" />
+                                                <Button :buttons="buttonMyData" @buttonClick="handleButtonEmit" />
+                                        </div>
+                                </div>
+                        </div>
+                </div>
+        </div>
 </template>

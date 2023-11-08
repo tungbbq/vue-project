@@ -122,7 +122,7 @@ const buttonRegistration: ButtonInterface[] = [
     {
         id: 1,
         type: 'button',
-        name: 'registrieren',
+        name: 'Registrieren',
         function: 'submit'
     }
 ];
@@ -168,32 +168,48 @@ const handleButtonEmit = (task: string) => {
 </script>
 
 <template>
-       <div class="container-fluid d-flex flex-column align-items-center justify-content-center vh-100">
-    <main>
-        <h1 class="display-5 text-center align-middle">Registration</h1>
-        <Form ref='form' :validation-schema="schema">
-            <Input :inputs="inputRegistration" @input="handleInputUpdate" />
-
-            <div class="input-group mb-3">
-                <span class="input-group-text"><i class="bi bi-check2-circle"></i></span>
-                <Field 
-                name='termsOfUse' 
-                v-model="termsOfUse" 
-                type="checkbox" 
-                class="btn-check" 
-                id="btn-check-outlined"
-                value="true" 
-                autocomplete="off" 
-                />
-                <label class="btn btn-outline-secondary form-control" for="btn-check-outlined">Ich stimme den <b> Nutzungsbedingungen
-                    </b> zu
-                    und habe die <b> Datenschutzerklärung </b> gelesen.</label><br>
-
-                <ErrorMessage name="termsOfUse" class='form-control is-invalid' />
+    <div class="container-fluid d-flex flex-column align-items-center justify-content-center vh-100">
+        <div class="row">
+            <!-- Left side with the image (25% width) -->
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                <!-- Use 'd-flex justify-content-center align-items-center' classes -->
+                <img src="../../assets/skygate-logo.0d9d427a.svg" class="mb-4" width="185" height="80">
             </div>
+     
 
-            <Button :buttons="buttonRegistration" @buttonClick="handleButtonEmit" />
-        </Form>
-    </main>
-</div>
+            <!-- Right side with the content (75% width) -->
+            <div class="col-md-8 mt-4">
+                <!-- Add 'mt-4' class for top margin to create space -->
+                <div class="container h-50">
+                    <div class="col-lg-12 mx-auto">
+                        <div
+                            class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+                            <div class="col p-4 d-flex flex-column position-static">
+                                <h4 class="display-6 mb-4 "> Registrierung</h4>
+
+                                <Form ref='form' :validation-schema="schema">
+                                    <Input :inputs="inputRegistration" @input="handleInputUpdate" />
+
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text"><i class="bi bi-check2-circle"></i></span>
+                                        <Field name='termsOfUse' v-model="termsOfUse" type="checkbox" class="btn-check"
+                                            id="btn-check-outlined" value="true" autocomplete="off" />
+                                        <label class="btn btn-outline-secondary form-control" for="btn-check-outlined">Ich
+                                            stimme den <b> Nutzungsbedingungen
+                                            </b> zu
+                                            und habe die <b> Datenschutzerklärung </b> gelesen.</label><br>
+
+                                        <ErrorMessage name="termsOfUse" class='form-control is-invalid' />
+                                    </div>
+
+                                    <Button :buttons="buttonRegistration" @buttonClick="handleButtonEmit" />
+                                </Form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>

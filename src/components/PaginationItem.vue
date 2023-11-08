@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { computed } from 'vue';
 
 interface Props {
   currentPage: number,
@@ -65,9 +65,10 @@ const pages = computed(() => {
 </script>
 
 <template>
+
   <nav aria-label="Page navigation example">
     <ul class="pagination">
-      <li>
+      <li class="page-item">
         <button class="page-link" type="button" @click="onClickFirstPage" :disabled="isInFirstPage">First
         </button>
       </li>
@@ -80,7 +81,7 @@ const pages = computed(() => {
 
       <!-- Visible Buttons Start -->
 
-      <li v-for="page in pages" :key="page.name">
+      <li class="page-item" v-for="page in pages" :key="page.name">
         <button class="page-link" :class="{ active: page.isDisabled }" type="button" @click="onClickPage(page.name)"
           :disabled="page.isDisabled">
           {{ page.name }}
@@ -93,9 +94,10 @@ const pages = computed(() => {
           &gt
         </button>
       </li>
-      <li><button class="page-link" type="button" @click="onClickLastPage" :disabled="isInLastPage"> Last
+      <li class="page-item"><button class="page-link" type="button" @click="onClickLastPage" :disabled="isInLastPage"> Last
         </button>
       </li>
     </ul>
   </nav>
+
 </template>

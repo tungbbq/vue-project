@@ -77,8 +77,9 @@ const emitUserId = (userId: number) => {
 </script>
 
 <template>
+
   <table class="table">
-    <thead>
+    <thead class="table-warning">
       <tr>
         <th scope="col"></th>
         <th
@@ -87,15 +88,11 @@ const emitUserId = (userId: number) => {
           :key="columnIndex"
           @click="sortColumn(column)"
         >
-          {{ column.label }}
-          <span
-            v-if="sortColumnIndex === columnIndex && sortOrder === 'asc'"
-          >
+          <span style="font-weight: bold">{{ column.label }}</span>
+          <span v-if="sortColumnIndex === columnIndex && sortOrder === 'asc'">
             <i class="bi bi-arrow-up"></i>
           </span>
-          <span
-            v-if="sortColumnIndex === columnIndex && sortOrder === 'desc'"
-          >
+          <span v-if="sortColumnIndex === columnIndex && sortOrder === 'desc'">
             <i class="bi bi-arrow-down"></i>
           </span>
         </th>
@@ -105,10 +102,11 @@ const emitUserId = (userId: number) => {
       <tr v-for="user in sortedUsers" :key="user.id" @click="emitUserId(user.id)">
         <th scope="row">{{ user.id }}</th>
         <td v-for="(column, columnIndex) in props.tableColumns" :key="columnIndex">
-         <!-- @vue-skip -->
+          <!-- @vue-skip -->
           {{ user[column.key] }}
         </td>
       </tr>
     </tbody>
   </table>
+
 </template>

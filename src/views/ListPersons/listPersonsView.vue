@@ -50,12 +50,11 @@ const getTotalPages = async () => {
         .then((res: AxiosResponse) => {
             totalCountUsers.value = res.data
             totalPages.value = Math.ceil(totalCountUsers.value / perPages)
-
         })
         .catch((error: AxiosError) => {
             console.log(error)
         })
-        updatePagination(currentPage.value)
+    updatePagination(currentPage.value)
 };
 
 const updatePagination = (newPage: number) => {
@@ -101,7 +100,7 @@ const searchResults = () => {
             .catch((error: AxiosError) => {
                 console.log(error)
             })
-        }
+    }
     getSearchResults()
 }
 
@@ -118,8 +117,19 @@ const searchResults = () => {
 </script>
 
 <template>
-    <Navbar />
-    <Table :users="users" :tableColumns="tableColumns" @user-clicked="showUser" />
-    <Pagination :maxVisibleButtons="maxVisibleButtons" :totalPages="totalPages" :perPages="perPages"
-        :currentPage="currentPage" @pagechanged="updatePagination" />
+    <div class="row">
+        <div class="vh-100">
+            <Navbar />
+            <div
+                class="container-fluid h-75 shadow p-3 mb-5 bg-white rounded col-12 d-flex align-items-center justify-content-center">
+                <div class="container">
+                    <Table :users="users" :tableColumns="tableColumns" @user-clicked="showUser" />
+                    <div class="d-flex justify-content-center mt-4">
+                        <Pagination :maxVisibleButtons="maxVisibleButtons" :totalPages="totalPages" :perPages="perPages"
+                            :currentPage="currentPage" @pagechanged="updatePagination" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
